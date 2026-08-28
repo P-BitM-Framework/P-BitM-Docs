@@ -1,0 +1,123 @@
+---
+title: "Campaigns"
+description: "Create, schedule, control, and complete authorized P-BitM campaigns."
+---
+
+A campaign binds reusable content, delivery settings, routing, and browser
+session options into one controlled assessment.
+
+## Before creating a campaign
+
+Prepare the target list, landing page, and—unless the campaign is
+standalone—the email template and SMTP profile. Plugins and modules are
+optional.
+
+<Tip>
+Create and review reusable resources before opening the wizard. This keeps the
+final review focused on scope, timing, recipients, and runtime behavior.
+</Tip>
+
+## Campaign wizard
+
+<Steps>
+  <Step title="Setup" icon="settings-2">
+    Set the name, description, campaign type, and production hostname.
+  </Step>
+  <Step title="Content" icon="files">
+    Select the SMTP profile, email template, landing page, plugins, and modules.
+  </Step>
+  <Step title="Launch" icon="send">
+    Select the target list, target URL, schedule, tracking parameter, protocol,
+    and streaming options.
+  </Step>
+  <Step title="Review" icon="clipboard-check">
+    Confirm authorization, scope, resources, timing, routing, and data handling
+    before the campaign can start.
+  </Step>
+</Steps>
+
+<Frame>
+  <img src="/assets/screenshots/user-guide/campaigns-wizard-steps.png" alt="New Campaign wizard on the Setup step, with the four-step progress indicator" />
+</Frame>
+
+The final step summarizes every choice made in the previous three before the
+campaign can be created:
+
+<Frame>
+  <img src="/assets/screenshots/user-guide/campaigns-review.png" alt="Campaign wizard Review step summarizing campaign, content, attack vectors, and launch settings" />
+</Frame>
+
+## Campaign creation demo
+
+This recording shows the campaign-creation workflow with synthetic data in a
+controlled environment. It is provided for review of the operator experience,
+not as a substitute for written authorization and scope review.
+
+<Frame>
+  <video
+    alt="Controlled campaign-creation workflow in the P-BitM dashboard"
+    controls
+    playsInline
+    preload="metadata"
+    className="w-full rounded-xl"
+    src="/assets/videos/getting_started/campaign_cration_and_mfa_bypass.mp4"
+  ></video>
+</Frame>
+
+Target URLs must be complete HTTP or HTTPS URLs. Production campaigns also
+require a hostname without a scheme, port, path, query, or fragment.
+
+## Campaign types
+
+<Tabs>
+  <Tab title="Complete" icon="workflow">
+    Complete campaigns use the selected email and SMTP delivery resources. The
+    dashboard always creates them with a scheduled delivery window.
+
+    Both timezone-aware start and end times are required. The start must be in
+    the future and the end must follow the start. P-BitM activates the campaign
+    at the start and distributes recipient email delivery across that window.
+    The end time closes the planned email-delivery window; it does not stop or
+    complete the campaign.
+  </Tab>
+  <Tab title="Standalone" icon="mouse-pointer-click">
+    Standalone campaigns are the immediate, non-scheduled option. They start as
+    soon as creation succeeds and do not require an SMTP profile or email
+    template.
+  </Tab>
+</Tabs>
+
+## Production hostname reservations
+
+In production, an active or paused campaign exclusively owns its public
+hostname. A scheduled Complete campaign reserves that hostname for every UTC
+calendar day covered by its start and end times, so two scheduled windows on
+the same UTC day conflict even when their hours do not overlap. The same
+hostname can be reused for delivery windows on different UTC days. After
+activation, the campaign continues to own the hostname while it remains
+`active` or `paused`.
+
+If another active or paused campaign still owns the hostname when a scheduled
+campaign becomes due, activation remains pending and is retried after the
+hostname becomes available. Stopping or completing the owner releases it.
+
+## Runtime controls
+
+Campaign states include `draft`, `scheduled`, `active`, `paused`, `completed`,
+and `error`.
+
+A Complete campaign can be stopped manually while it is still scheduled or
+after it becomes active. Once active, both Complete and Standalone campaigns can
+be paused and resumed. Pause suspends the campaign runtime; resume returns that
+runtime to `active`. Stop is terminal for either campaign type: it removes the
+runtime and changes the campaign state to `completed`.
+
+<Info>
+A Complete campaign remains active after its email-delivery window ends. It can
+continue for days, weeks, or months and is completed only when an operator
+stops it. P-BitM does not infer campaign completion from the final scheduled
+email time.
+</Info>
+
+Use the dashboard for routine lifecycle management. CLI equivalents are listed
+in the [CLI reference](/reference/cli).

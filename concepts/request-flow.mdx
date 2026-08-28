@@ -1,0 +1,63 @@
+---
+title: "Request flow"
+description: "Trace administrative, campaign admission, and collection requests through P-BitM."
+---
+
+The control plane and campaign plane follow different trust paths. Switch
+between them to trace authentication, authorization, and workload creation.
+
+<Tabs>
+  <Tab title="Administrative request" icon="shield-check">
+    <Steps>
+      <Step title="Open the dashboard">
+        The operator opens the loopback dashboard over HTTPS.
+      </Step>
+      <Step title="Proxy the API request">
+        Frontend nginx proxies `/api` requests to the admin backend.
+      </Step>
+      <Step title="Authenticate the session">
+        The backend authenticates the opaque server-side session cookie.
+      </Step>
+      <Step title="Authorize the route">
+        Route-level authorization checks the user role and resource ownership.
+      </Step>
+      <Step title="Read or update state">
+        The backend reads or updates SQLite and campaign storage.
+      </Step>
+    </Steps>
+  </Tab>
+  <Tab title="Campaign admission" icon="door-open">
+    <Steps>
+      <Step title="Open the campaign URL">
+        An approved recipient reaches the campaign URL through Traefik.
+      </Step>
+      <Step title="Validate routing state">
+        The campaign service validates routing and tracking state.
+      </Step>
+      <Step title="Exchange the landing state">
+        The landing flow exchanges valid state for a short-lived signed session
+        token.
+      </Step>
+      <Step title="Admit the WebSocket">
+        The WebSocket handshake must complete within the configured timeout and
+        admission limits.
+      </Step>
+      <Step title="Create the browser workload">
+        The campaign service asks the authenticated admin backend to create the
+        target browser container.
+      </Step>
+    </Steps>
+
+    <Warning>
+      Tracking identifiers and stream paths are bearer-like capabilities and
+      must not be written to routine logs or documentation examples.
+    </Warning>
+  </Tab>
+</Tabs>
+
+## Collection
+
+Campaign-local clients send bounded, validated records to private collection
+routes. The campaign service forwards authenticated events to the admin
+backend, which owns persistence. The dashboard later reads those records
+through its authenticated API.

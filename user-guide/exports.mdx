@@ -1,0 +1,47 @@
+---
+title: "Exports"
+description: "Export campaign data and browser profiles for authorized evidence handling."
+---
+
+P-BitM separates an operational campaign metadata dump from per-session
+artifact and browser-profile exports.
+
+## Campaign export
+
+Use the dashboard or CLI:
+
+```bash
+python3 p-bitm.py campaign <campaign-id> dump
+python3 p-bitm.py campaign <campaign-id> dump --output ./campaign-export.json
+```
+
+The CLI export is JSON. Its `victims` array contains the target records and
+`victim_count` reports their number. Each victim row includes identifiers,
+session identifiers, client address and user agent data, and active state.
+
+It does not contain the campaign event timeline,
+screenshots, uploaded files, module results, or Firefox profiles. CSV is not
+currently implemented.
+
+<Info>
+Treat `campaign dump` as an inventory or operational record, not as a complete
+evidence archive.
+</Info>
+
+## Browser-profile export
+
+The dashboard's per-session export first includes artifacts already stored for
+that victim session. When its live browser container is available, the backend
+also attempts a fresh Firefox-profile dump. If the container is unavailable or
+that dump fails, the export continues with stored artifacts only.
+
+A live Firefox profile is read as a bounded TAR stream and converted directly
+to a ZIP file on disk. The backend does not hold the complete TAR, ZIP, or a
+Base64 representation in memory. Archive paths and member types are validated
+and configured export limits are enforced.
+
+## Evidence handling
+
+Exports are not automatically sanitized or crypted. Store them in an approved encrypted
+location, record who created each copy, and remove them at the end of the
+retention period.

@@ -1,0 +1,128 @@
+---
+title: "Modules"
+description: "Create, review, and execute operator-triggered module payloads."
+---
+
+Modules are operator-triggered HTML and JavaScript payload definitions. They
+are stored in the module library and may be assigned to campaigns.
+
+## Library operations
+
+Each module defines a name, description, category, optional icon and link,
+input descriptors, and a payload. The backend validates size and shape before
+persistence.
+
+<Steps>
+  <Step title="Open the module editor" icon="plus">
+    Open **Modules** and select **New Module**.
+  </Step>
+  <Step title="Define the contract" icon="file">
+    Enter the name, description, category, optional icon and link, and the
+    inputs the operator must supply.
+  </Step>
+  <Step title="Add the payload" icon="code-xml">
+    Add the bounded HTML and JavaScript payload, including deterministic
+    cleanup for timers, listeners, media resources, and visible UI.
+  </Step>
+  <Step title="Save and assign" icon="list-checks">
+    Save the module, then select it in the campaign wizard. It becomes available
+    to authorized operators for execution on an active selected session.
+  </Step>
+</Steps>
+
+<Frame>
+  <img src="/assets/screenshots/user-guide/modules-editor.png" alt="Module editor showing name, description, parameters, and HTML/JavaScript payload" />
+</Frame>
+
+## Controlled module demonstrations
+
+Each recording below uses synthetic data and a target covered by written
+authorization. Treat them as demonstrations of visible behavior and cleanup,
+not as operating instructions.
+
+### ClickFix module
+
+<Frame>
+  <video
+    alt="Controlled ClickFix module demonstration"
+    controls
+    playsInline
+    preload="metadata"
+    className="w-full rounded-xl"
+    src="/assets/videos/client_modules/clickfix_module.mp4"
+  ></video>
+</Frame>
+
+### Credential collection module
+
+<Frame>
+  <video
+    alt="Controlled credential-collection module demonstration with synthetic data"
+    controls
+    playsInline
+    preload="metadata"
+    className="w-full rounded-xl"
+    src="/assets/videos/client_modules/credential_harvesting_module.mp4"
+  ></video>
+</Frame>
+
+### Face KYC module
+
+<Frame>
+  <video
+    alt="Controlled face-KYC module demonstration with synthetic data"
+    controls
+    playsInline
+    preload="metadata"
+    className="w-full rounded-xl"
+    src="/assets/videos/client_modules/face_kyc_module.mp4"
+  ></video>
+</Frame>
+
+### Network scanner module
+
+<Frame>
+  <video
+    alt="Controlled network-scanner module demonstration"
+    controls
+    playsInline
+    preload="metadata"
+    className="w-full rounded-xl"
+    src="/assets/videos/client_modules/network_scanner_module.mp4"
+  ></video>
+</Frame>
+
+The Modules page also supports editing, cloning, exporting, and deleting
+library records. The exported JSON is suitable for backup, review, or use as a
+source definition. The dashboard does not currently provide a module-import
+action.
+
+To ship a reviewed module as a repository seed, add its JSON definition to the
+top level of `modules/` before the backend's initial startup. The supplied
+Compose files mount that directory at `/modules` and enable seed data. At
+startup, P-BitM reads its `*.json` files only when the module library is empty.
+If the deployment already contains a module, adding another file to `modules/`
+does not import it; re-create that definition with **New Module**.
+
+Module inputs are resolved when an authorized operator executes the module for
+a selected active session. The backend wraps visual content in a managed
+overlay and supplies cleanup behavior.
+
+## Safety
+
+Modules are active code. Review them for:
+
+- engagement scope and expected user-visible behavior;
+- safe parameter handling;
+- bounded output;
+- campaign-local data submission;
+- reliable cleanup;
+- absence of hard-coded secrets or unrelated external endpoints.
+
+Do not use library examples as authorization to execute a module. Scope and
+operator approval remain external requirements.
+
+See the [module format reference](/reference/module-format).
+
+Developers preparing a reusable seed module or runtime change should also read
+[creating and contributing attack vectors](/development/attack-vectors).

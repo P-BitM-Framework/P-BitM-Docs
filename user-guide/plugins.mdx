@@ -1,0 +1,113 @@
+---
+title: "Plugins"
+description: "Create, review, and assign Firefox extension packages to campaigns."
+---
+
+Plugins are Firefox extension packages stored in the admin library and
+selected when creating a campaign.
+
+## Library operations
+
+The dashboard supports creating, editing, importing, exporting, and deleting
+plugins. A plugin contains:
+
+- a name and description;
+- at most 128 files;
+- validated relative file names;
+- text content for each file.
+
+At minimum, a usable extension normally includes `manifest.json` and the
+scripts or assets referenced by that manifest.
+
+<Steps>
+  <Step title="Create the library record" icon="plus">
+    Open **Browser Extensions**, select **New Plugin**, enter a name and
+    description, and choose **Create & Edit**.
+  </Step>
+  <Step title="Add the extension files" icon="files">
+    Create or upload `manifest.json` and every referenced script or text asset
+    in the plugin editor. File paths must be relative and use forward slashes.
+  </Step>
+  <Step title="Review and save" icon="save">
+    Review the manifest, permissions, URL matches, scripts, and communication
+    paths, then save the complete file set.
+  </Step>
+  <Step title="Assign it to a campaign" icon="list-checks">
+    Select the plugin in the campaign wizard. P-BitM packages and installs it
+    when target browser containers are created.
+  </Step>
+</Steps>
+
+<Frame>
+  <img src="/assets/screenshots/user-guide/plugins-editor.png" alt="Plugin editor showing the extension file list and manifest.json contents" />
+</Frame>
+
+Use **Import** instead of **New Plugin** for an existing reviewed P-BitM Firefox extension ZIP archive.
+
+**Export** creates a portable ZIP for review, backup, or another deployment.
+
+## Review checklist
+
+Before enabling a plugin:
+
+- inspect every file;
+- request only necessary Firefox permissions;
+- use campaign-local communication paths;
+- avoid hard-coded credentials, public tokens, and unrelated remote hosts;
+- validate all externally supplied data;
+- confirm that cleanup occurs when the session ends.
+
+Plugins execute inside assessment browser containers and must be treated as
+trusted active code. Use only plugins reviewed for the current engagement.
+
+## Built-in runtime extensions
+
+P-BitM also packages a small set of built-in Firefox extensions into each
+session container. Their source remains in
+`bitm-images/common/firefox/bad_firefox_extensions`.
+
+- **File interception** records and hijacks files downloaded during the
+  session.
+- **Session persistence** prevents common logout actions.
+- **Site information** keeps the session view aligned with the active page's
+  title and favicon.
+- **Shortcut control** limits browser keyboard shortcuts.
+- **Form collection** records data explicitly submitted through web forms.
+- **Cookie collection** records cookies.
+
+## Built-in extension demonstrations
+
+These recordings use synthetic data and an authorized test environment. They
+are included to review operator-visible behavior; they do not expand the
+approved scope of a campaign.
+
+### File interception demo
+
+<Frame>
+  <video
+    alt="Controlled file-interception extension demonstration"
+    controls
+    playsInline
+    preload="metadata"
+    className="w-full rounded-xl"
+    src="/assets/videos/plugins/file_hijacking.mp4"
+  ></video>
+</Frame>
+
+### Session persistence demo
+
+<Frame>
+  <video
+    alt="Controlled session-persistence extension demonstration"
+    controls
+    playsInline
+    preload="metadata"
+    className="w-full rounded-xl"
+    src="/assets/videos/plugins/persistence_logout.mp4"
+  ></video>
+</Frame>
+
+See the [plugin format reference](/reference/plugin-format).
+
+Developers preparing a reusable or built-in extension should also read
+[creating and contributing attack vectors](/development/attack-vectors).

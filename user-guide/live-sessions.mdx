@@ -1,0 +1,54 @@
+---
+title: "Live sessions"
+description: "Understand VNC and Selkies live-session behavior and troubleshooting."
+---
+
+The **Victim** detail view exposes live browser controls only after an
+authorized target has established a campaign session.
+
+<Frame>
+  <img src="/assets/screenshots/user-guide/live-sessions-viewer.png" alt="Victim detail view with Live Control, screenshot gallery, and live keylog panels" />
+</Frame>
+
+## Video demo
+
+The recording uses a synthetic, authorized target to show the operator-facing
+session view and evidence panels.
+
+<Frame>
+  <video
+    alt="Operator view of a synthetic live session and evidence panels"
+    controls
+    playsInline
+    preload="metadata"
+    className="w-full rounded-xl"
+    src="/assets/videos/getting_started/victim_dashboard.mp4"
+  ></video>
+</Frame>
+
+## Protocols
+
+- **VNC** uses the VNC browser image and a proxied live view.
+- **Selkies** (default) uses the Selkies image and exposes additional streaming-quality
+  settings in the campaign wizard.
+
+## Session behavior
+
+Each victim session receives a dedicated browser container. The admin backend
+validates campaign and victim ownership before returning stream access or
+performing runtime actions.
+
+If a stream does not become ready within the configured startup timeout, check
+the campaign and target-session logs before recreating the session.
+
+## Screenshots
+
+Screenshots are captured only when an authenticated operator requests one.
+They are taken inside the browser container and stored in the standard
+campaign storage, and then shown in the victim gallery.
+
+## Keylogger
+
+Empty records are not intended to appear as copyable keylog blocks. Session
+and timestamp markers provide context, while only actual key content is
+copyable.

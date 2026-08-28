@@ -1,0 +1,43 @@
+---
+title: "Actions and evidence"
+description: "Run live actions against a session and review the evidence it collects."
+---
+
+The **Victim** dashboard organizes approved assessment telemetry by target.
+Available panels can include:
+
+- event timeline and connection metadata;
+- submitted form records;
+- captured files;
+- plugin and module results.
+
+These panels sit alongside live-action tabs on the same victim detail view:
+
+<Frame>
+  <img src="/assets/screenshots/user-guide/live-session-operator-tabs.png" alt="Victim detail view tab bar with Monitor, Actions, Collected Data, Cookies, and Activity tabs" />
+</Frame>
+
+## Actions
+
+- **Monitor** — a console for running ad hoc JavaScript directly against the
+  active browser session, independent of any saved module.
+- **Actions** — execute a saved [module](/user-guide/modules) against the active session.
+- **Collected Data** — the evidence panels described above.
+- **Cookies** — cookies captured from the victim browser.
+- **Activity** — an audit log of operator actions taken on this session.
+
+<Warning>
+The Monitor console runs arbitrary JavaScript in the victim's browser
+immediately, with no review step. Treat it with the same care as a
+[module](/user-guide/modules#safety): stay within the current authorized
+engagement, and never run code you have not reviewed.
+</Warning>
+
+## Handling requirements
+
+Collected data may contain highly sensitive information. Limit access to
+assigned operators, export only when required, store exports securely, and
+delete both live data and copies according to the engagement agreement.
+
+The administrative UI retrieves stored records through authenticated backend
+requests. Internal collection endpoints are not public integration APIs.

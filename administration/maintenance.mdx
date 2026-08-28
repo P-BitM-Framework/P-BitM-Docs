@@ -1,0 +1,58 @@
+---
+title: "Maintenance"
+description: "Perform routine P-BitM updates, diagnostics, cleanup, and credential rotation."
+---
+
+## Routine checks
+
+```bash
+python3 p-bitm.py status
+python3 p-bitm.py doctor
+```
+
+Review container health, disk capacity, certificate expiry, database
+integrity, image freshness, and unexpected campaign workloads.
+
+## Rebuild after updates
+
+```bash
+python3 -m pip install -r requirements.txt
+python3 p-bitm.py up --build
+python3 p-bitm.py doctor --strict
+```
+
+## Clean inactive workloads
+
+Remove application-owned target-browser containers:
+
+```bash
+python3 p-bitm.py cleanup
+```
+
+Also remove all application-owned campaign workloads and isolated networks:
+
+```bash
+python3 p-bitm.py cleanup --campaigns
+```
+
+The second form is destructive and asks for confirmation when
+`cli.confirm_destructive` is enabled.
+
+## Reset images
+
+`reset` stops application services and removes application-owned containers
+and configured Docker images. It preserves the database and stored campaign
+artifacts:
+
+```bash
+python3 p-bitm.py reset
+python3 p-bitm.py up --build
+```
+
+Use it only when a full image rebuild is intended.
+
+<Warning>
+Container logs are not part of persistent P-BitM storage and are lost when
+their containers are removed unless the Docker logging configuration sends
+them elsewhere.
+</Warning>

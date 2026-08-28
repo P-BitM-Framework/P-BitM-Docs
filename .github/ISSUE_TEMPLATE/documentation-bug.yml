@@ -1,0 +1,36 @@
+name: Documentation bug
+description: Report inaccurate, unclear, incomplete, or broken documentation.
+title: "[Docs]: "
+body:
+  - type: markdown
+    attributes:
+      value: Do not include credentials, tracking identifiers, captured data, or personal information.
+  - type: input
+    id: page
+    attributes:
+      label: Page
+      description: Link or repository path of the affected page.
+      placeholder: /getting-started/installation
+    validations:
+      required: true
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem
+      description: Explain what is inaccurate, unclear, incomplete, or broken.
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected documentation
+      description: Describe the correction and cite the relevant P-BitM source when possible.
+    validations:
+      required: true
+  - type: checkboxes
+    id: sensitive
+    attributes:
+      label: Sensitive data
+      options:
+        - label: I confirm this report contains no secrets, captured data, real targets, or personal information.
+          required: true

@@ -1,0 +1,63 @@
+---
+title: "Team and roles"
+description: "Manage dashboard administrators and operators without weakening campaign ownership or account safeguards."
+---
+
+The dashboard's **Team** page is available to administrators. It manages the
+two supported roles: `admin` and `operator`.
+
+## Access model
+
+| Capability | Admin | Operator |
+|---|---:|---:|
+| Manage shared target, template, SMTP, landing-page, plugin, and module libraries | Yes | Yes |
+| Create campaigns | Yes | Yes |
+| Read and control any campaign | Yes | No |
+| Read and control campaigns they created | Yes | Yes |
+| Manage team accounts | Yes | No |
+
+Campaign authorization is ownership-based for operators. Requests for a
+campaign owned by another operator are returned as not found; administrators
+can access all campaigns.
+
+## Create an account
+
+Open **Team**, select **New User**, and provide a unique username, email address,
+and role. P-BitM generates a strong temporary password and returns it only in
+the creation response. The dashboard displays that credential after creation;
+copy it then and transfer it through an approved secret-sharing channel.
+
+<Warning>
+P-BitM does not retain a recoverable plaintext copy of a generated password.
+Do not place it in tickets, chat history, campaign content, or documentation.
+</Warning>
+
+## Update and revoke access
+
+An administrator can change a user's email or role, enable or disable the
+account, generate a replacement temporary password, or delete the account.
+Role changes, activation changes, and password resets revoke the affected
+user's existing dashboard sessions.
+
+The account protections prevent an administrator from:
+
+- disabling or deleting their own account;
+- demoting, disabling, or deleting the last active administrator.
+
+Deleting another user permanently removes the account and transfers campaigns
+created by that user to the administrator performing the deletion.
+
+## CLI administration
+
+The CLI provides non-dashboard recovery and account-management commands:
+
+```bash
+python3 p-bitm.py admin users list
+python3 p-bitm.py admin users create <username> --email <email> --role operator
+python3 p-bitm.py admin users set-role <username> --role admin
+python3 p-bitm.py admin users disable <username>
+python3 p-bitm.py admin users enable <username>
+python3 p-bitm.py admin reset-password --username <username>
+```
+
+See the [CLI reference](/reference/cli) before using destructive user commands.

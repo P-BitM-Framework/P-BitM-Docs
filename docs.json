@@ -1,0 +1,325 @@
+{
+  "$schema": "https://mintlify.com/docs.json",
+  "theme": "mint",
+  "name": "P-BitM",
+  "description": "Documentation for P-BitM, a containerized platform for controlled browser-in-the-middle security assessments.",
+  "colors": {
+    "primary": "#C4472D",
+    "light": "#F06A48",
+    "dark": "#C4472D"
+  },
+  "logo": {
+    "light": "/assets/p-bitm-logo-v2.png",
+    "dark": "/assets/p-bitm-logo-v2.png",
+    "href": "/"
+  },
+  "favicon": "/assets/favicon.png",
+  "appearance": {
+    "default": "dark"
+  },
+  "icons": {
+    "library": "lucide"
+  },
+  "background": {
+    "decoration": "gradient"
+  },
+  "styling": {
+    "eyebrows": "breadcrumbs",
+    "codeblocks": "system"
+  },
+  "navbar": {
+    "links": [
+      {
+        "label": "Contribute",
+        "href": "https://github.com/P-BitM-Framework/P-BitM-Docs/blob/main/CONTRIBUTING.md"
+      }
+    ],
+    "primary": {
+      "type": "github",
+      "href": "https://github.com/P-BitM-Framework/P-BitM"
+    }
+  },
+  "navigation": {
+    "tabs": [
+      {
+        "tab": "Home",
+        "icon": "house",
+        "groups": [
+          {
+            "group": "Home",
+            "pages": [
+              "index"
+            ]
+          }
+        ]
+      },
+      {
+        "tab": "P-BitM",
+        "icon": "fish-symbol",
+        "groups": [
+          {
+            "group": "Get started",
+            "icon": "rocket",
+            "pages": [
+              "getting-started/overview",
+              "getting-started/requirements",
+              "getting-started/installation",
+              "getting-started/configuration",
+              "getting-started/quick-start"
+            ]
+          },
+          {
+            "group": "Video demos",
+            "icon": "clapperboard",
+            "pages": [
+              "video-demos"
+            ]
+          },
+          {
+            "group": "User guide",
+            "icon": "panel-top",
+            "pages": [
+              "user-guide/campaigns",
+              {
+                "group": "Campaign resources",
+                "icon": "folders",
+                "pages": [
+                  "user-guide/target-lists",
+                  "user-guide/email-templates",
+                  "user-guide/smtp-profiles",
+                  "user-guide/landing-pages"
+                ]
+              },
+              {
+                "group": "Sessions and evidence",
+                "icon": "monitor-up",
+                "pages": [
+                  "user-guide/live-sessions",
+                  "user-guide/actions-and-evidence",
+                  "user-guide/exports"
+                ]
+              },
+              {
+                "group": "Extensions",
+                "icon": "blocks",
+                "pages": [
+                  "user-guide/plugins",
+                  "user-guide/modules"
+                ]
+              }
+            ]
+          },
+          {
+            "group": "Concepts",
+            "icon": "network",
+            "pages": [
+              "concepts/architecture",
+              "concepts/campaign-lifecycle",
+              "concepts/request-flow",
+              "concepts/session-containers",
+              "concepts/storage-and-database",
+              "concepts/security-model"
+            ]
+          },
+          {
+            "group": "Security",
+            "icon": "shield-check",
+            "pages": [
+              "security/authorized-use",
+              "security/deployment-hardening",
+              "security/reporting-vulnerabilities"
+            ]
+          },
+          {
+            "group": "Administration",
+            "icon": "settings",
+            "pages": [
+              "administration/deployment",
+              "administration/users-and-roles",
+              {
+                "group": "Configuration",
+                "icon": "sliders-horizontal",
+                "pages": [
+                  "administration/environment-variables",
+                  "administration/networking-and-tls",
+                  "administration/storage-and-backups"
+                ]
+              },
+              {
+                "group": "Operations",
+                "icon": "wrench",
+                "pages": [
+                  "administration/maintenance",
+                  "administration/doctor",
+                  "administration/troubleshooting"
+                ]
+              }
+            ]
+          },
+          {
+            "group": "Development",
+            "icon": "code-xml",
+            "pages": [
+              "development/setup",
+              "development/attack-vectors",
+              {
+                "group": "Application",
+                "icon": "boxes",
+                "pages": [
+                  "development/backend",
+                  "development/campaign-backend",
+                  "development/frontend",
+                  "development/database"
+                ]
+              },
+              "development/testing"
+            ]
+          }
+        ]
+      },
+      {
+        "tab": "Reference",
+        "icon": "book-open",
+        "groups": [
+          {
+            "group": "Runtime reference",
+            "icon": "terminal",
+            "pages": [
+              "reference/cli",
+              "reference/configuration",
+              "reference/services"
+            ]
+          },
+          {
+            "group": "Extension formats",
+            "icon": "braces",
+            "pages": [
+              "reference/module-format",
+              "reference/plugin-format"
+            ]
+          },
+          {
+            "group": "Project",
+            "icon": "heart-handshake",
+            "pages": [
+              "legal/credits"
+            ]
+          }
+        ]
+      }
+    ],
+    "global": {
+      "anchors": [
+        {
+          "anchor": "Source code",
+          "href": "https://github.com/P-BitM-Framework/P-BitM",
+          "icon": "github"
+        },
+        {
+          "anchor": "Documentation repo",
+          "href": "https://github.com/P-BitM-Framework/P-BitM-Docs",
+          "icon": "file-text"
+        },
+        {
+          "anchor": "Authorized use",
+          "href": "/security/authorized-use",
+          "icon": "shield-check"
+        }
+      ]
+    }
+  },
+  "footer": {
+    "socials": {
+      "github": "https://github.com/P-BitM-Framework"
+    },
+    "links": [
+      {
+        "header": "Get started",
+        "items": [
+          {
+            "label": "Overview",
+            "href": "/getting-started/overview"
+          },
+          {
+            "label": "Requirements",
+            "href": "/getting-started/requirements"
+          },
+          {
+            "label": "Quick start",
+            "href": "/getting-started/quick-start"
+          }
+        ]
+      },
+      {
+        "header": "Operate",
+        "items": [
+          {
+            "label": "Campaigns",
+            "href": "/user-guide/campaigns"
+          },
+          {
+            "label": "Live sessions",
+            "href": "/user-guide/live-sessions"
+          },
+          {
+            "label": "Troubleshooting",
+            "href": "/administration/troubleshooting"
+          }
+        ]
+      },
+      {
+        "header": "Project",
+        "items": [
+          {
+            "label": "P-BitM repository",
+            "href": "https://github.com/P-BitM-Framework/P-BitM"
+          },
+          {
+            "label": "Documentation repository",
+            "href": "https://github.com/P-BitM-Framework/P-BitM-Docs"
+          },
+          {
+            "label": "Credits",
+            "href": "/legal/credits"
+          }
+        ]
+      },
+      {
+        "header": "Security",
+        "items": [
+          {
+            "label": "Authorized use",
+            "href": "/security/authorized-use"
+          },
+          {
+            "label": "Deployment hardening",
+            "href": "/security/deployment-hardening"
+          },
+          {
+            "label": "Report a vulnerability",
+            "href": "/security/reporting-vulnerabilities"
+          }
+        ]
+      }
+    ]
+  },
+  "redirects": [
+    {
+      "source": "/user-guide/collected-data",
+      "destination": "/user-guide/actions-and-evidence"
+    }
+  ],
+  "interaction": {
+    "drilldown": false
+  },
+  "metadata": {
+    "timestamp": true
+  },
+  "errors": {
+    "404": {
+      "redirect": false,
+      "title": "Page not found",
+      "description": "The requested P-BitM documentation page does not exist or has moved."
+    }
+  }
+}

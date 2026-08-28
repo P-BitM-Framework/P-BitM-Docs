@@ -1,0 +1,52 @@
+---
+title: "Campaign lifecycle"
+description: "Follow campaign state from creation and scheduling through cleanup and recovery."
+---
+
+## Creation
+
+The admin backend validates the target URL, hostname, selected library
+resources, schedule, protocol, and options. It persists the campaign and its
+target records atomically; a partial campaign is not committed if creation
+fails.
+
+The dashboard creates a Complete campaign in `scheduled` with a required email
+delivery start and end time. A Standalone campaign has no schedule and enters
+`active` immediately.
+
+## Scheduled activation and delivery
+
+Complete campaigns begin in `scheduled`. The background scheduler activates
+them when the timezone-aware start is reached. Recipient send times are
+distributed across the configured start/end window. The end bounds planned
+email delivery only; it is not a campaign expiry time.
+
+## Active
+
+An active campaign has a campaign service and isolated networks. Target
+browser containers are created on demand after admission. This state can
+represent either a scheduled Complete campaign whose start time has passed or
+an immediate Standalone campaign.
+
+## Pause and resume
+
+Both campaign types expose the same controls once active. Pause changes the
+state to `paused` and suspends the campaign runtime. Resume returns that runtime
+to `active`. Pausing does not convert an immediate Standalone campaign into a
+scheduled campaign and does not change a Complete campaign's configured email
+delivery window.
+
+## Stop and cleanup
+
+Manual stop marks either campaign type `completed` and removes related
+containers and isolated networks. A Complete campaign may also be stopped
+before its scheduled start. Otherwise, it remains active or paused until an
+operator stops it, regardless of how long ago its email-delivery window ended.
+Deletion is a separate destructive action and is rejected when resource or
+authorization constraints are not satisfied.
+
+## Recovery
+
+The admin runtime reconciler checks persisted state against Docker state after
+startup and during scheduled runs. Orphan handling uses the configured grace
+period instead of immediately deleting unknown workloads.

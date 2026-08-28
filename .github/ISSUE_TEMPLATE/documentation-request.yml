@@ -1,0 +1,25 @@
+name: Documentation request
+description: Suggest a new guide, explanation, or reference topic.
+title: "[Docs request]: "
+body:
+  - type: textarea
+    id: need
+    attributes:
+      label: User need
+      description: What should a reader be able to understand or complete?
+    validations:
+      required: true
+  - type: textarea
+    id: source
+    attributes:
+      label: P-BitM source
+      description: Link relevant code, configuration, tests, issues, or pull requests.
+    validations:
+      required: true
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposed coverage
+      description: Outline the content and where it should appear.
+    validations:
+      required: true

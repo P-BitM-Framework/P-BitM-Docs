@@ -1,0 +1,97 @@
+---
+title: "Installation"
+description: "Install P-BitM and provision its local runtime safely."
+---
+
+Complete the steps in order. Setup validates the host before it writes runtime
+configuration or starts services.
+
+<Steps titleSize="h2">
+  <Step title="Obtain the source" icon="git-fork">
+
+```bash
+git clone https://github.com/P-BitM-Framework/P-BitM
+cd P-BitM
+```
+
+  </Step>
+  <Step title="Verify the Docker toolchain" icon="container">
+
+P-BitM requires Docker Engine 23.0 or newer plus the Buildx and Compose
+plugins. All three commands must succeed:
+
+```bash
+docker version --format '{{.Server.Version}}'
+docker buildx version
+docker compose version
+```
+
+The standalone `docker-compose` command is not supported. See the
+[requirements](/getting-started/requirements) for installation guidance.
+
+Run these checks and P-BitM as the current user when possible. On Linux, grant
+that trusted user Docker access as described in the requirements when
+`docker info` is denied. No particular UID/GID is required. `sudo` and direct
+root launches are supported, but the application containers still run as a
+matched non-root identity.
+
+  </Step>
+  <Step title="Install the CLI dependencies" icon="package-check">
+
+```bash
+python3 -m venv .venv
+source .venv/bin/activate
+python3 -m pip install -r requirements.txt
+```
+
+  </Step>
+  <Step title="Review the configuration" icon="file-cog">
+
+Open `config.yaml` and confirm at least:
+
+- `app.environment`;
+- `app.dashboard_url`;
+- storage and certificate paths;
+- enabled Docker images;
+- DNS challenge provider and credential variable names.
+
+<Warning>
+Do not place DNS credentials or application secrets in `config.yaml`.
+</Warning>
+
+  </Step>
+  <Step title="Provision runtime files" icon="folder-cog">
+
+```bash
+python3 p-bitm.py setup
+```
+
+Setup checks Docker Engine, Buildx, and the Compose plugin; generates
+`server/.env`; provisions DNS credential files for production; creates storage
+directories private to the selected runtime identity; and generates local TLS
+certificates when they are missing. On Linux it also selects the runtime
+UID/GID and records it in `server/.env`.
+
+DNS credentials are stored below the ignored `server/.secrets/dns/` directory
+with restrictive permissions. To replace them later:
+
+```bash
+python3 p-bitm.py setup --rotate-dns-secrets
+```
+
+  </Step>
+  <Step title="Run diagnostics" icon="stethoscope">
+
+```bash
+python3 p-bitm.py doctor
+```
+
+Resolve every failure before starting the stack. Warnings are non-blocking
+during normal operation but block `doctor --strict`.
+
+  </Step>
+</Steps>
+
+<Card title="Continue to quick start" icon="arrow-right" href="/getting-started/quick-start" horizontal>
+  Start the control plane, verify its health, and prepare an authorized campaign.
+</Card>

@@ -1,0 +1,374 @@
+---
+title: "Creating and contributing attack vectors"
+description: "Create Firefox plugins or client modules in the dashboard, then contribute reusable attack vectors using P-BitM's supported contracts."
+---
+
+P-BitM exposes two extension models for adding authorized browser assessment
+behavior. Use a Firefox plugin for browser-level, campaign-scoped behavior and
+a client module for an operator-triggered action on one active session.
+
+Both can be created directly from their dedicated pages in the administrative
+dashboard. A repository contribution is required only when the attack vector
+should ship with P-BitM as a built-in Firefox extension, a seed module, or a
+change to the shared runtime contract.
+
+<Warning>
+Attack-vector contributions are active code. Develop and test them only with
+synthetic data and targets you control. Never include real credentials,
+cookies, session material, personal data, or third-party infrastructure in
+source, fixtures, screenshots, logs, or pull requests.
+</Warning>
+
+## Choose the execution model
+
+<Columns cols={2}>
+  <Card title="Firefox plugin" icon="puzzle">
+    Installed when a target browser starts. Choose this model for Firefox
+    WebExtension APIs, navigation lifecycle events, or behavior that must remain
+    active throughout the session.
+  </Card>
+  <Card title="Client module" icon="mouse-pointer-click">
+    Executed by an authorized operator on a selected active session. Choose this
+    model for a bounded HTML/JavaScript interaction that has a clear completion
+    and cleanup path.
+  </Card>
+</Columns>
+
+## Dashboard library or repository contribution
+
+<Tabs>
+  <Tab title="Create in the dashboard" icon="layout-dashboard">
+    <Steps>
+      <Step title="Create a Firefox plugin" icon="puzzle">
+        Open **Browser Extensions**, select **New Plugin**, enter its name and
+        description, then choose **Create & Edit**. Add or upload
+        `manifest.json` and every referenced source file in the plugin editor,
+        then save. Use **Import** instead when a reviewed P-BitM plugin ZIP is
+        already available.
+      </Step>
+      <Step title="Create a client module" icon="mouse-pointer-click">
+        Open **Modules** and select **New Module**. Define its metadata,
+        category, optional icon and link, inputs, and HTML/JavaScript payload,
+        then save. Existing modules can also be opened, cloned, edited, exported,
+        or deleted from the same page.
+      </Step>
+      <Step title="Assign it to a campaign" icon="list-checks">
+        Select the reviewed plugin or module in the campaign wizard. Plugins are
+        installed when target browsers start; assigned modules become
+        available to the operator for execution on an active session.
+      </Step>
+    </Steps>
+
+    <Info>
+      Dashboard-created records belong to that P-BitM deployment and are stored
+      in its application database. Export them for review or backup. A plugin
+      ZIP can be imported into another deployment; a module JSON export is a
+      source definition and must be re-created or installed as a seed before
+      the initial module-library population.
+    </Info>
+  </Tab>
+  <Tab title="Contribute to the repository" icon="git-pull-request-arrow">
+    Use the repository path when the behavior should be distributed with the
+    project:
+
+    - built-in Firefox extensions live below
+      `bitm-images/common/firefox/bad_firefox_extensions/`;
+    - seed module definitions live in `modules/`;
+    - changes to validation, packaging, execution, collection, or dashboard
+      editing require corresponding backend or frontend changes;
+    - shared behavior must include regression coverage, documentation, and
+      licensing or provenance details.
+
+    A dashboard-created plugin or module is not automatically a source-code
+    contribution. Export and review it first, then add only the files intended
+    for project-wide distribution. Plugin ZIPs can be imported by another
+    dashboard. Module JSON exports cannot currently be imported there; use them
+    as the source for manual recreation or a reviewed repository seed.
+  </Tab>
+</Tabs>
+
+<Tabs>
+  <Tab title="Firefox plugin" icon="puzzle">
+
+### Create it in the dashboard
+
+The **Browser Extensions** page supports two creation paths:
+
+- **New Plugin** creates an empty library record and opens the file editor,
+  where you can create or upload `manifest.json`, scripts, and text assets;
+- **Import** accepts a reviewed ZIP using the P-BitM archive layout described
+  below.
+
+The editor's upload control accepts `.js`, `.json`, and `.md`. Create other
+UTF-8 text paths directly in the editor, or include them in a reviewed import
+ZIP; binary plugin files are not supported.
+
+The editor saves the plugin name, description, and complete validated file set.
+Export produces the same portable ZIP layout used by import.
+
+### Runtime lifecycle
+
+A plugin selected in the campaign wizard is copied into campaign-owned
+storage. When P-BitM creates a target browser, it packages the validated
+files as an XPI, replaces the supported `VICTIM_ID` placeholder in `.js` and
+`.html` files, and installs the XPI through Firefox enterprise policy.
+
+Use campaign-local routes for any approved communication. Do not send collected
+content to hard-coded public hosts or introduce a second, unaudited data path.
+
+### Extension source
+
+A usable plugin normally contains a WebExtension manifest and every script or
+asset referenced by it:
+
+```text
+approved-extension/
+├── manifest.json
+├── background.js
+├── content.js
+└── icons/
+    └── icon.svg
+```
+
+The current P-BitM extensions use Firefox Manifest V2. Give every extension a
+unique Gecko ID, scope URL matches deliberately, and request only the browser
+permissions required by the documented behavior.
+
+```json manifest.json
+{
+  "manifest_version": 2,
+  "name": "Authorized assessment marker",
+  "version": "1.0.0",
+  "description": "Adds a visible marker on the synthetic assessment target.",
+  "content_scripts": [
+    {
+      "matches": ["https://example.test/*"],
+      "js": ["content.js"],
+      "run_at": "document_idle"
+    }
+  ],
+  "browser_specific_settings": {
+    "gecko": {
+      "id": "assessment-marker@p-bitm.local"
+    }
+  }
+}
+```
+
+### Library ZIP
+
+Plugins imported through the dashboard use a wrapper archive. `plugin.json`
+contains P-BitM library metadata; files below `files/` become the extension
+source and the runtime XPI.
+
+```text
+approved-extension.zip
+├── plugin.json
+└── files/
+    ├── manifest.json
+    ├── background.js
+    └── content.js
+```
+
+```json plugin.json
+{
+  "name": "Authorized assessment marker",
+  "description": "Visible marker for a controlled test target."
+}
+```
+
+Library plugin files must be UTF-8 text with canonical relative POSIX paths.
+The backend rejects absolute paths, backslashes, `.` or `..` segments,
+duplicates, symlinks, encrypted ZIP members, and non-text content. The current
+limits are 128 files, 2 MiB per file, and 10 MiB total uncompressed content.
+
+<Info>
+The archive wrapper is not part of the installed extension. Firefox receives
+the contents of `files/`, packaged by P-BitM as an XPI.
+</Info>
+
+### Library plugin or built-in extension
+
+- Add a **library plugin** when operators should explicitly import, review, and
+  assign the behavior to selected campaigns.
+- Change a **built-in extension** only when the behavior is a platform default
+  that every browser runtime requires. Built-ins live below
+  `bitm-images/common/firefox/bad_firefox_extensions/` and must remain aligned
+  with the extension list in `server/backend/routes/campaign_lifecycle.py` and
+  both VNC and Selkies startup scripts.
+
+The packaging tests verify that each declared built-in has a manifest and that
+both browser runtimes package the same declared set.
+
+See the complete [plugin format reference](/reference/plugin-format).
+
+  </Tab>
+  <Tab title="Client module" icon="mouse-pointer-click">
+
+### Create it in the dashboard
+
+Open **Modules** and select **New Module**. The module dialog exposes the same
+fields as the JSON contract: name, description, category, optional icon and
+link, input descriptors, and payload. Saving creates the library record
+immediately; the page also supports editing, cloning, exporting, and deletion.
+There is no dashboard module-import action, so an exported definition must be
+re-created in the editor or reviewed and added to `modules/` as a seed. The
+backend reads top-level `*.json` files from that directory at startup only when
+the module library is empty; adding a file does not update an initialized
+library.
+
+### Runtime lifecycle
+
+A module is stored as a JSON definition. An operator selects it for an active
+session and supplies its declared inputs. The campaign service then:
+
+1. resolves `{{victim_id}}`, `{{module_id}}`, and declared
+   `{{ params[id] }}` placeholders;
+2. places the HTML inside a managed full-screen overlay;
+3. extracts scripts from the payload;
+4. sends the HTML and JavaScript over the active session channel;
+5. provides `__removeModule()` for deterministic DOM cleanup.
+
+Use a module for one bounded interaction. Do not leave global event listeners,
+timers, media tracks, overlays, or modified page state behind after completion.
+
+### Module definition
+
+Use `modules/_example-template.json` to understand the available fields, then
+keep the finished definition strict and self-contained. This minimal example
+uses no interpolated input:
+
+```json assessment-marker.json
+{
+  "name": "Assessment marker",
+  "description": "Shows an approved message briefly in the active session.",
+  "category": "Awareness",
+  "icon": null,
+  "inputs": [],
+  "payload": "<div id=\"assessment-marker\">Authorized assessment marker</div><script>setTimeout(function(){__removeModule();},5000);</script>",
+  "link": null
+}
+```
+
+The underscore in `_example-template.json` is a repository naming convention;
+it is not a runtime exclusion rule. Add only finished, reviewed seed definitions
+to `modules/`.
+
+### Inputs and output
+
+Parameter substitution is textual. Treat every operator-supplied value as
+untrusted and validate or encode it for the exact HTML, attribute, URL, or
+JavaScript context where it is used. Prefer DOM APIs such as `textContent` when
+displaying values, and never build executable code from a parameter.
+
+If a module must return approved, bounded results, post them to the
+campaign-local collection route `c/{{victim_id}}` with:
+
+- `data_type: "module_data"`;
+- the resolved `{{module_id}}`;
+- a small JSON `metadata` object containing only the required result.
+
+For that campaign-local route, the module runtime adds the active session
+collection credential to `fetch` requests. Do not copy that credential, log it,
+or send it anywhere else.
+
+Current module limits include 64 inputs, input IDs from 0 through 10,000, and a
+1 MiB payload. See the complete [module format reference](/reference/module-format).
+
+  </Tab>
+</Tabs>
+
+## Repository contribution workflow
+
+<Steps titleSize="h2">
+  <Step title="Define the assessment contract" icon="file-check-2">
+    Describe the authorized use case, execution trigger, required permissions,
+    expected visible behavior, data produced, retention needs, and cleanup
+    conditions. Explain why an existing plugin or module cannot provide it.
+  </Step>
+  <Step title="Choose the smallest extension surface" icon="scan-line">
+    Prefer an operator-triggered module for a short page interaction. Use a
+    Firefox plugin only when the behavior genuinely requires WebExtension APIs
+    or continuous browser lifecycle access.
+  </Step>
+  <Step title="Implement against the contract" icon="code-xml">
+    Follow the manifest or JSON format above. Keep permissions, files, inputs,
+    output, and runtime duration as small as possible. Reuse campaign-local
+    transport and the provided cleanup mechanism.
+  </Step>
+  <Step title="Test both success and cleanup" icon="flask-conical">
+    Test only against synthetic pages and data. Verify the intended behavior,
+    malformed or missing inputs, repeated execution, navigation, session end,
+    and cleanup. Firefox changes must work in both VNC and Selkies runtimes.
+  </Step>
+  <Step title="Add regression coverage and documentation" icon="list-checks">
+    Update tests for validation, packaging, runtime integration, or UI changes.
+    Document permissions, inputs, output, limitations, and operator-visible
+    behavior without including real assessment data.
+  </Step>
+  <Step title="Submit a reviewable pull request" icon="git-pull-request-arrow">
+    Include the problem, design choice, security and privacy impact, test
+    results, third-party provenance, and any compatibility or migration effect.
+  </Step>
+</Steps>
+
+## Verification
+
+<Tabs>
+  <Tab title="Firefox plugin" icon="puzzle">
+
+```bash
+PYTHONPATH=server/backend python3 -m pytest \
+  server/backend/tests/test_plugin_files.py \
+  server/backend/tests/test_extension_packaging.py
+```
+
+Run the complete backend suite when packaging, campaign creation, container
+startup, or collection behavior changes.
+
+  </Tab>
+  <Tab title="Client module" icon="mouse-pointer-click">
+
+```bash
+PYTHONPATH=server/backend python3 -m pytest server/backend/tests
+PYTHONPATH=server/backend-phishing/app python3 -m pytest server/backend-phishing/tests
+```
+
+Exercise the module through an active synthetic session and confirm that its
+DOM, listeners, timers, and media resources are removed afterward.
+
+  </Tab>
+  <Tab title="Frontend editor" icon="layout-dashboard">
+
+```bash
+cd server/frontend
+npm ci
+npm run lint
+npm test
+npm run build
+```
+
+Run these checks when changing the plugin editor, module library, campaign
+selection, or session module controls.
+
+  </Tab>
+</Tabs>
+
+## Review standard
+
+Before proposing the new attack vector, confirm:
+
+- the use case is limited to controlled, explicitly authorized assessments;
+- Firefox permissions and URL matches are no broader than required;
+- inputs are treated as untrusted and output is schema-valid and bounded;
+- all communication stays on documented campaign-local paths;
+- no secrets, identifiers, collected content, or personal data enter logs;
+- repeated execution and cleanup are deterministic;
+- VNC and Selkies compatibility is tested when browser behavior changes;
+- validation, packaging, runtime, and UI changes have regression coverage;
+- documentation states operator-visible behavior and limitations;
+- third-party code and assets have compatible licenses and attribution.
+
+<Card title="Read the contribution policy" icon="git-pull-request-arrow" href="https://github.com/P-BitM-Framework/P-BitM/blob/main/CONTRIBUTING.md" horizontal>
+  Review repository-wide testing, licensing, documentation, and pull-request requirements.
+</Card>

@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Security vulnerability
+    url: https://github.com/P-BitM-Framework/P-BitM/security/policy
+    about: Report suspected vulnerabilities privately; do not open a public issue.
+  - name: P-BitM product issue
+    url: https://github.com/P-BitM-Framework/P-BitM/issues
+    about: Report implementation bugs and feature requests in the source repository.

@@ -1,0 +1,42 @@
+---
+title: "Email templates"
+description: "Author reusable campaign email content and resolve recipient variables."
+---
+
+Email templates store the subject, HTML body, optional text body, attachment
+metadata, category, tags, and declared variables used by Complete campaigns.
+
+## Authoring
+
+Create a template in **Email Templates**, then preview its raw HTML or text
+content before use. The dashboard preview does not substitute recipient values
+or resolve a campaign link. Verify the fully rendered message and resolved link
+with designated internal recipients before launch. Keep a plain-text
+alternative when the exercise requires broad mail-client compatibility.
+
+Template content is size-limited and validated by the backend. Response-only
+fields such as IDs, counters, and timestamps are not accepted in create or
+update payloads.
+
+## Template variables
+
+`{{first_name}}`, `{{last_name}}`, `{{email}}`, and `{{position}}` are
+resolved per target. `{{company}}` is resolved from the target list's own
+company field (set on the list, not per target), since a list represents a
+single engagement. `{{tracking_url}}` and its compatibility alias
+`{{phishing_url}}` resolve to the recipient-specific campaign link.
+`{{tracking_pixel}}` resolves to the recipient tracking image. The HTML sender
+also injects that tracking image automatically when the placeholder is absent.
+
+<Warning>
+The current sender does not attach files stored in the template's `attachments`
+field. Treat that field as metadata and do not rely on it for message delivery.
+</Warning>
+
+## Operational guidance
+
+- Use only approved branding and wording.
+- Avoid embedding real secrets or personal data.
+- Confirm that links resolve to the intended campaign hostname.
+- Test rendering with designated internal recipients before launch.
+- Duplicate a template when you need an independently editable variant.

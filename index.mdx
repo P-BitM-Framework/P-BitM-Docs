@@ -1,0 +1,170 @@
+---
+title: "P-BitM documentation"
+description: "Documentation for P-BitM, a containerized platform for controlled Browser-in-the-Middle security assessments."
+mode: "custom"
+---
+
+import AuthorizedUse from '/snippets/authorized-use.mdx';
+
+<div className="pbitm-hero w-full px-6 py-16 lg:py-20">
+  <div
+    className="mx-auto flex w-full flex-col items-center gap-10 lg:flex-row lg:justify-between"
+    style={{ maxWidth: '76rem' }}
+  >
+    <div className="text-center lg:text-left" style={{ maxWidth: '43rem' }}>
+      <p className="pbitm-kicker m-0 text-sm font-semibold">
+        P-BitM documentation
+      </p>
+      <h1
+        className="mt-4 text-white"
+        style={{ fontSize: 'clamp(2.5rem, 7vw, 4.75rem)', lineHeight: 1.02 }}
+      >
+        Persistent Browser-In-The-Middle
+      </h1>
+      <p
+        className="mt-6 text-lg text-gray-200"
+        style={{ lineHeight: 1.7, maxWidth: '40rem' }}
+      >
+        P-BitM is a containerized platform for controlled Browser-in-the-Middle security assessments. It combines an administrative dashboard, isolated campaign services, dedicated browser containers, live session viewing, and bounded evidence collection.
+      </p>
+      <div className="mt-8 flex flex-wrap justify-center gap-3 lg:justify-start">
+        <a
+          href="/getting-started/overview"
+          className="rounded-lg bg-white px-5 py-3 font-semibold text-gray-950 no-underline shadow-sm"
+        >
+          Get started
+        </a>
+        <a
+          href="/concepts/architecture"
+          className="rounded-lg bg-white/10 px-5 py-3 font-semibold text-white no-underline backdrop-blur-sm transition-colors hover:bg-white/20"
+        >
+          Explore the architecture
+        </a>
+      </div>
+    </div>
+
+    <img
+      className="pbitm-hero-logo"
+      src="/assets/logo.png"
+      alt="P-BitM logo"
+      style={{ width: 'min(22rem, 76vw)', height: 'auto' }}
+    />
+  </div>
+</div>
+
+<div
+  className="mx-auto px-5 py-12 lg:py-16"
+  style={{ maxWidth: '76rem' }}
+>
+  <AuthorizedUse />
+
+  <div className="mt-12">
+    <p className="pbitm-kicker m-0 text-sm font-semibold">See it in action</p>
+    <h2 className="mt-2">One focused dashboard for each active session</h2>
+    <p>
+      Review live browser activity, operator controls, screenshots, and bounded
+      evidence from the session detail view.
+    </p>
+
+    <Frame>
+      <img src="/assets/screenshots/user-guide/live-sessions-viewer.png" alt="P-BitM session detail view with live control, screenshot gallery, and evidence panels" />
+    </Frame>
+
+    <Columns cols={2}>
+      <Card title="Explore live sessions" icon="monitor-up" href="/user-guide/live-sessions">
+        Understand the operator-facing live view, streaming modes, and evidence
+        behavior.
+      </Card>
+      <Card title="Watch demos" icon="clapperboard" href="/video-demos">
+        Browse short recordings of campaigns, extensions, modules, and sessions.
+      </Card>
+    </Columns>
+  </div>
+
+  <div className="mt-12">
+    <p className="pbitm-kicker m-0 text-sm font-semibold">Choose a path</p>
+    <h2 className="mt-2">Get to the right answer quickly</h2>
+
+    <Columns cols={4}>
+      <Card title="Get started" icon="rocket" href="/getting-started/overview">
+        Check requirements, install the platform, and verify the control plane.
+      </Card>
+      <Card title="Operate campaigns" icon="panel-top" href="/user-guide/campaigns">
+        Prepare resources, launch authorized campaigns, and manage sessions.
+      </Card>
+      <Card title="Administer" icon="settings" href="/administration/deployment">
+        Configure production routing, TLS, storage, backups, and maintenance.
+      </Card>
+      <Card title="Extend P-BitM" icon="code-xml" href="/development/setup">
+        Work within the backend, frontend, database, and extension boundaries.
+      </Card>
+    </Columns>
+  </div>
+
+  <div className="mt-16">
+    <p className="pbitm-kicker m-0 text-sm font-semibold">Deployment flow</p>
+    <h2 className="mt-2">From source to a verified stack</h2>
+
+    <Steps>
+      <Step title="Prepare the host" icon="server">
+        Confirm Docker Engine, Buildx, Compose, Python, networking, and written
+        authorization in the [requirements](/getting-started/requirements).
+      </Step>
+      <Step title="Provision P-BitM" icon="package-check">
+        Clone the source, create the CLI environment, review `config.yaml`, and
+        run `python3 p-bitm.py setup`.
+      </Step>
+      <Step title="Verify and launch" icon="badge-check">
+        Resolve `doctor` failures, start the control plane, and prepare only
+        approved campaign resources and recipients.
+      </Step>
+    </Steps>
+  </div>
+
+  <div className="mt-16">
+    <p className="pbitm-kicker m-0 text-sm font-semibold">Explore by role</p>
+    <h2 className="mt-2">Documentation shaped around the work</h2>
+
+    <Tabs>
+      <Tab title="Operator" icon="mouse-pointer-click">
+        <Columns cols={2}>
+          <Card title="Campaign workflow" icon="route" href="/user-guide/campaigns">
+            Schedule Complete campaigns, launch Standalone campaigns immediately,
+            and control either type through completion.
+          </Card>
+          <Card title="Sessions and evidence" icon="monitor-up" href="/user-guide/live-sessions">
+            Inspect sessions and handle collected records and exports.
+          </Card>
+        </Columns>
+      </Tab>
+      <Tab title="Administrator" icon="shield-check">
+        <Columns cols={2}>
+          <Card title="Production deployment" icon="cloud-cog" href="/administration/deployment">
+            Build and start the stack with deliberate routing and shutdown controls.
+          </Card>
+          <Card title="Deployment hardening" icon="lock-keyhole" href="/security/deployment-hardening">
+            Protect the control plane, secrets, containers, network, and content.
+          </Card>
+        </Columns>
+      </Tab>
+      <Tab title="Contributor" icon="git-pull-request-arrow">
+        <Columns cols={2}>
+          <Card title="Development setup" icon="terminal" href="/development/setup">
+            Prepare frontend and CLI tooling and respect repository boundaries.
+          </Card>
+          <Card title="Contribute attack vectors" icon="braces" href="/development/attack-vectors">
+            Build Firefox plugins or client modules against the supported contracts.
+          </Card>
+        </Columns>
+      </Tab>
+    </Tabs>
+  </div>
+
+  <div className="mt-16">
+    <Note>
+      This documentation tracks the actively developed P-BitM `0.1.0` codebase.
+      Interfaces and stored data formats may change before the first stable
+      release. Internal HTTP endpoints are not a public compatibility contract.
+    </Note>
+  </div>
+</div>
