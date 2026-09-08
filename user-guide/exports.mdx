@@ -40,8 +40,16 @@ to a ZIP file on disk. The backend does not hold the complete TAR, ZIP, or a
 Base64 representation in memory. Archive paths and member types are validated
 and configured export limits are enforced.
 
+P-BitM excludes runtime configuration from the exported profile: `user.js`,
+`prefs.js`, and the `chrome/` directory. Firefox creates its local preferences
+when the profile is opened, while cookies, site storage, history, and other
+browser state remain available. It also removes extensions installed from the
+campaign's P-BitM developer-extension directory and their startup metadata;
+other extensions already in the profile are retained. The campaign policy file
+is not part of the profile export.
+
 ## Evidence handling
 
-Exports are not automatically sanitized or crypted. Store them in an approved encrypted
-location, record who created each copy, and remove them at the end of the
-retention period.
+Except for these portability changes, exports are not automatically sanitized
+or encrypted. Store them in an approved encrypted location, record who created
+each copy, and remove them at the end of the retention period.
