@@ -11,6 +11,13 @@ This is the human-managed source for deployment mode, paths, image build
 definitions, DNS challenge settings, session limits, cleanup policy, and CLI
 behavior.
 
+The shipped template intentionally uses placeholders for certificate identity
+and production DNS settings. Replace the certificate identity placeholders
+before running `setup` when `ssl.auto_generate` is enabled. For production,
+also set the ACME contact email, DNS provider, and required DNS credential
+variable names. See the [configuration reference](/reference/configuration)
+for the required values and secret-handling rules.
+
 ## `server/.env`
 
 This generated and ignored file contains runtime paths, the initial
@@ -44,4 +51,3 @@ ports `1025` and `8025`.
 - [Configuration reference](/reference/configuration)
 - [Environment variables](/administration/environment-variables)
 - [Networking and TLS](/administration/networking-and-tls)
-

@@ -25,6 +25,40 @@ python3 p-bitm.py setup
 python3 p-bitm.py doctor
 ```
 
+## Configure the production DNS challenge
+
+Before running `setup` in production, replace the DNS challenge placeholders
+in `config.yaml`. Set `ssl.dns_challenge.provider` to the Traefik/lego provider
+that manages the deployment domain, then list that provider's required
+environment-variable names under `ssl.dns_challenge.credentials`.
+
+```yaml
+ssl:
+  # Required in production for ACME certificate notifications.
+  acme_email: "<ACME_EMAIL>"
+
+  dns_challenge:
+    provider: "<DNS_PROVIDER>"
+    credentials:
+      - "<PROVIDER_REQUIRED_ENV_VAR>"
+    environment: {}
+```
+
+`credentials` contains variable names, not credential values. The CLI prompts
+for the values securely during `setup` and stores them in local secret files.
+
+<Warning>
+The shipped placeholders are intentionally not valid production values. Do not
+leave them unchanged, and do not store DNS tokens in `config.yaml`. If
+`ssl.auto_generate` is enabled, also replace the certificate identity
+placeholders before running `setup`.
+</Warning>
+
+Use Traefik's [DNS challenge provider reference](https://doc.traefik.io/traefik/https/acme/#providers)
+to find the supported provider identifier and its required environment variables. See the
+[configuration reference](/reference/configuration) for the complete
+configuration contract.
+
 ## Build and start
 
 ```bash

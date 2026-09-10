@@ -28,13 +28,56 @@ shipped Selkies image uses one multi-architecture Dockerfile.
 `ssl.auto_generate` controls local certificate provisioning. Certificate
 identity fields and `validity_days` apply to generated local certificates.
 
+The shipped configuration uses placeholders for certificate identity. Replace
+them before running `setup` when automatic local certificate generation is
+enabled:
+
+```yaml
+ssl:
+  country: "<COUNTRY_CODE>" # ISO 3166-1 alpha-2 code, for example "US"
+  state: "<STATE_OR_PROVINCE>"
+  city: "<CITY>"
+  organization: "<ORGANIZATION>"
+  common_name: "<COMMON_NAME>"
+  validity_days: 365
+```
+
+In production, also set `ssl.acme_email` to an operator-controlled address for
+ACME certificate notifications. Do not use a maintainer's personal address.
+
 `ssl.dns_challenge` contains:
 
 - `provider`: Traefik/lego provider name;
 - `credentials`: required secret variable names;
 - `environment`: non-secret provider variables.
 
-Credential values must not be stored in this file.
+For production deployments, replace the shipped placeholders before running
+`setup`:
+
+```yaml
+ssl:
+  # Required in production for ACME certificate notifications.
+  acme_email: "<ACME_EMAIL>"
+
+  dns_challenge:
+    # Traefik/lego provider name.
+    provider: "<DNS_PROVIDER>"
+
+    # Required environment-variable names, not secret values.
+    credentials:
+      - "<PROVIDER_REQUIRED_ENV_VAR>"
+
+    # Optional non-secret provider variables, for example AWS_REGION.
+    environment: {}
+```
+
+`credentials` must contain the environment-variable names required by the
+selected provider, not their values. During `setup`, the CLI securely prompts
+for those values and stores them as separate local secret files.
+
+See Traefik's [ACME DNS challenge provider reference](https://doc.traefik.io/traefik/https/acme/#providers)
+for supported provider names and required environment variables. Credential values must
+not be stored in `config.yaml`.
 
 ## Administration and sessions
 
